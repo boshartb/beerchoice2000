@@ -5,7 +5,7 @@ class Main extends Component {
     render() {
         return (
             <div className="wrapper">
-                <Header />
+                <Header siteName="Beer Me! 🍻" />
             </div>
         )
     }
