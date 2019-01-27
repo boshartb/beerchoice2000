@@ -21,6 +21,31 @@ class Main extends Component {
         this.setState({ numBeers: beerAmount });
     };
 
+    loadBeers = (searchTerm = 'hops') => {
+        // Check for beers in local storage
+        const localStorageBeers = localStorage.getItem(`search-${searchTerm}`);
+        if (localStorageBeers) {
+            const localBeers = JSON.parse(localStorageBeers);
+            this.setState({ beers: localBeers, loading: false });
+            return; // stop before fetch happens!
+        }
+
+        fetch(`http://api.react.beer/v2/search?q=${searchTerm}&type=beer`).then(data => data.json())
+            .then((beers) => {
+                console.log(beers);
+                // filter for beers with images
+                this.state.beers = beers.data.filter(beer => !!beer.labels);
+                this.setState({ beers: this.state.beers, loading: false });
+                // save to local storage in case we search for this again
+                localStorage.setItem(`search-${searchTerm}`, JSON.stringify(this.state.beers));
+            })
+            .catch(err => console.log(err))
+    };
+
+    componentDidMount() {
+        this.loadBeers();
+    }
+
     render() {
         return (
             <div className="wrapper">
@@ -28,7 +53,7 @@ class Main extends Component {
                 <button onClick={this.incrementBeers}>{this.state.numBeers} 🍺</button>
 
                 <Search />
-                <Results />
+                <Results beers={this.state.beers} />
             </div>
         )
     }
