@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 /* Import CSS */
 import css from './style.css';
 
-import Header from './components/Header';
+import Main from './components/Main';
 
 
-render(<Header />, document.querySelector('#root'));
+render(<Main />, document.querySelector('#root'));
